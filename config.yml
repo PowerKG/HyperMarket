@@ -1,0 +1,29 @@
+#██╗  ██╗██╗   ██╗██████╗ ███████╗██████╗     ███╗   ███╗ █████╗ ██████╗ ██╗  ██╗███████╗████████╗
+#██║  ██║╚██╗ ██╔╝██╔══██╗██╔════╝██╔══██╗    ████╗ ████║██╔══██╗██╔══██╗██║ ██╔╝██╔════╝╚══██╔══╝
+#███████║ ╚████╔╝ ██████╔╝█████╗  ██████╔╝    ██╔████╔██║███████║██████╔╝█████╔╝ █████╗     ██║   
+#██╔══██║  ╚██╔╝  ██╔═══╝ ██╔══╝  ██╔══██╗    ██║╚██╔╝██║██╔══██║██╔══██╗██╔═██╗ ██╔══╝     ██║   
+#██║  ██║   ██║   ██║     ███████╗██║  ██║    ██║ ╚═╝ ██║██║  ██║██║  ██║██║  ██╗███████╗   ██║   
+#╚═╝  ╚═╝   ╚═╝   ╚═╝     ╚══════╝╚═╝  ╚═╝    ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝   ╚═╝ 
+# Made by @PowerKG
+# 想要联系我?(Wanna contact me?) @邮箱(email):end_kg@126.com  @QQ:137391258
+
+
+#Language File
+#语言文本(位于lanuages内的问题)
+language: cn.yml
+
+Setting:
+  #Keep watch the last page.(If turns off,you will always stay in page one when you open Market.)
+  #使用浏览页面缓存(例如你逛市场逛到了第5页，下次你看还是在第5页)
+  UsePageCache: True
+  #设置是否允许玩家使用带颜色的货物描述
+  AllowColorfulDescription: True
+  #默认描述的效果(&f&o = 白色斜体)
+  DefaultDescriptionFont: "&f&o"
+  
+#市场税率
+Tax:
+  #是否开启发布税率
+  EnablePublish: True
+  PublishTax: 0.05
+  

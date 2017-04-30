@@ -1,0 +1,8 @@
+name: HyperMarket
+version: Beta
+main: net.powerkg.hyper.Market
+commands:
+   HyperMarket:
+      description: HyperMarket Command.
+   HM:
+      description: HyperMarket Command.

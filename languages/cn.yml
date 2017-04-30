@@ -1,0 +1,59 @@
+#Chinese-Simplified
+#中文简体
+#中文簡體
+
+Market: "市场"
+Shop: "商铺"
+PageUp: "下一页"
+PageDown: "上一页"
+Publish: "发布"
+Search: "查找"
+Price: "售价"
+Tax: "税率"
+Seller: "卖家"
+Confirm: "确认"
+Buy: "购买"
+
+GuiBuyHint: "§c<§f左边为购买信息§c|§f右边为选项§c>"
+
+Reconfirm: "请再次确认"
+ConfirmToPublish: "确认发布"
+ConfirmToBuy: "确认购买"
+CantPublish: "无法发布"
+NoSelected: "你没有选中任何物品."
+NoDescription: "这个人很懒,什么描述都没写."
+NowPageIs: "目前的页数是"
+SetCost: "设置价格"
+NowCost: "目前价格"
+SetDescription: "设置描述"
+NowDescription: "目前描述"
+ResetAll: "重置所有"
+NeedToCost: "需要花费"
+EachPriceIs: "每份售价为"
+Part: "份"
+Total: "总共"
+YourBalance: "你的余额"
+NoInInventory: "背包中没有该物品"
+
+
+AddBuyAmount: "增加购买数量"
+ReduceBuyAmount: "减少购买数量"
+NowBuyAmount: "目前购买数量"
+
+errLackInventory: "购买失败,背包空间无法装下这么多物品."
+
+infoSuccessfulBuy: "购买成功,物品已经添加到你的背包."
+infoPublishSuccessful: "成功发布"
+infoNotEnoughMoney: "余额不足"
+infoJump: "点击后跳转"
+infoClickChoose: "点击来确定"
+infoClick: "左键跳转购买,右键查看更多信息."
+infoWantToPublish: "你想要发布什么?"
+infoCommonPublish: "发布一个物品"
+infoCommonChooseAndSet: "选择一个物品来设置并发布"
+infoCommonChooseHint: "在你的背包中点击选取需要售卖的物品."
+infoSetCost: "&6&l打开聊天框&c并入数值来设置价格(例如12.25)&6&l(输入...或。。。来取消设置)"
+infoSetDescription: "&6&l打开聊天框&c并入你想要的描述&6&l(输入...或。。。来取消设置)"
+infoWroingVault: "你的输入的数值不正确,请重新输入."
+
+infoOverlengthDecimal: "你输入的小数点后数字太多或没有,请重新输入."
