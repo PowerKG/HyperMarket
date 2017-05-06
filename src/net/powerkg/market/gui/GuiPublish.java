@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import me.kg.easygui.EasyGui;
 import net.powerkg.market.IPublishType;
 import net.powerkg.market.MarketHandler;
-import net.powerkg.market.file.FileHandler;
+import net.powerkg.market.file.MarketConfig;
 
 public class GuiPublish extends EasyGui
 {
@@ -25,7 +25,7 @@ public class GuiPublish extends EasyGui
 
 		ArrayList<IPublishType> types = MarketHandler.getPublishTypes();
 		int needrow = types.size() / 9 + (types.size() % 9 == 0 ? 0 : 1);
-		inv = Bukkit.createInventory(null, needrow * 9, "¡ì9¡ìl" + FileHandler.translate("infoWantToPublish"));
+		inv = Bukkit.createInventory(null, needrow * 9, "¡ì9¡ìl" + MarketConfig.translate("infoWantToPublish"));
 
 		for (int i = 0; i < (types.size() > 54 ? 54 : types.size()); i++)
 		{

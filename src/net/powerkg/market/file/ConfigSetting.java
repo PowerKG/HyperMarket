@@ -10,7 +10,7 @@ public class ConfigSetting
 	public final String head;
 
 	public final Boolean UsePageCache = false, AllowColorfulDescription = true;
-	public final String DefaultDescriptionFont = null;
+	public final String DefaultDescriptionFont = null, DateFormat = null;
 
 	ConfigSetting(Class<?> clazz, FileConfiguration config, String head)
 	{
@@ -23,6 +23,7 @@ public class ConfigSetting
 		this.head = "Setting.";
 		OhUseTheFuckingDarkReflect(head, this, ConfigSetting.class, config);
 	}
+
 	private static void OhUseTheFuckingDarkReflect(String head, Object obj, Class<?> clazz, FileConfiguration config)
 	{
 		Field[] fields = clazz.getDeclaredFields();

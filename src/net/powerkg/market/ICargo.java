@@ -1,5 +1,9 @@
 package net.powerkg.market;
 
+import java.io.File;
+import java.util.Date;
+
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -14,7 +18,9 @@ public abstract class ICargo
 
 	protected String description = null;
 
-	public ICargo(IPublishType type, String owner, ItemStack base, double cost)
+	protected Date publishTime = null;
+
+	public ICargo(IPublishType type, Date publishTime, String owner, ItemStack base, double cost)
 	{
 		this.publishType = type;
 
@@ -22,9 +28,11 @@ public abstract class ICargo
 
 		this.base = base;
 		this.cost = cost;
+
+		this.publishTime = publishTime;
 	}
 
-	public ICargo(String owner, ItemStack base, double cost)
+	public ICargo(Date publishTime, String owner, ItemStack base, double cost)
 	{
 		this.publishType = null;
 
@@ -32,6 +40,13 @@ public abstract class ICargo
 
 		this.base = base;
 		this.cost = cost;
+
+		this.publishTime = publishTime;
+	}
+
+	public ICargo()
+	{
+
 	}
 
 	/**
@@ -44,7 +59,12 @@ public abstract class ICargo
 		else
 			CommonPublishment.instance.whenCargoClick(this, user, isRightClick);
 	}
-
+	
+	public Date getPublishTime()
+	{
+		return publishTime;
+	}
+	
 	public ItemStack getBase()
 	{
 		return base;
@@ -54,6 +74,20 @@ public abstract class ICargo
 	{
 		return cost;
 	}
+	
+	public String getOwner()
+	{
+		return ownerName;
+	}
+	
+	public IPublishType getPublishType()
+	{
+		return publishType;
+	}
+	
+	public abstract void read(String path, File file);
+
+	public abstract void write(String path, FileConfiguration file);
 
 	/**
 	 * 若返回值为
@@ -61,7 +95,9 @@ public abstract class ICargo
 	 *  False 取消执行
 	 * **/
 	public abstract boolean tryGetCargo(Player buyer, int amount);
-
+	
+	public abstract String getMark();
+	
 	public abstract ItemStack getDisplay();
 
 }

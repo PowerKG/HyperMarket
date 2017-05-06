@@ -24,7 +24,9 @@ public abstract class IPublishType
 		if (publish != null)
 			publish.tryToPublish(user);
 	}
-
+	
+	public abstract String getMark();
+	
 	/**
 	 * 当玩家点击绑定该类型的物品时
 	 * **/

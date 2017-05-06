@@ -6,7 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.powerkg.hyper.Market;
+import net.powerkg.hyper.HyperMarket;
+import net.powerkg.mailbox.GuiMailBox;
 import net.powerkg.market.gui.GuiMarket;
 
 public class CommandHyperMarket implements CommandExecutor
@@ -22,17 +23,21 @@ public class CommandHyperMarket implements CommandExecutor
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
 	{
-		if(!(sender instanceof Player))
+		if (!(sender instanceof Player))
 		{
-			Market.tellConsole("必须是玩家才能执行这个命令.");
+			HyperMarket.tellConsole("必须是玩家才能执行这个命令.");
 			return false;
 		}
-		
-		Player p =(Player)sender;
-		
+
+		Player p = (Player) sender;
+
 		if (args.length == 1 && args[0].equalsIgnoreCase("show"))
 		{
 			GuiMarket.open(p);
+		}
+		if (args[0].equalsIgnoreCase("test"))
+		{
+			new GuiMailBox(p).show();
 		}
 		return false;
 	}

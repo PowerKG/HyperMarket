@@ -1,19 +1,27 @@
 package net.powerkg.market.handler;
 
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
+import net.powerkg.hyper.HyperHandler;
 
 /**
  * Hook Vault
  * 该类中控制金融相关所有数据
  * **/
-public class EconomyHandler
+public class EconomyHandler implements HyperHandler
 {
 	private static Economy economy = null;
-
+	
+	@Override
+	public boolean load(Plugin plugin)
+	{
+		return setupEconomy();
+	}
+	
 	public boolean setupEconomy()
 	{
 		try

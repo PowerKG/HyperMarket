@@ -1,40 +1,50 @@
 package net.powerkg.market;
 
+import java.io.File;
+import java.util.Date;
+
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import net.powerkg.market.file.FileHandler;
+import net.powerkg.mailbox.MailBoxHandler;
+import net.powerkg.mailbox.mail.MailItem;
+import net.powerkg.market.file.MarketConfig;
 import net.powerkg.utils.Tools;
 
 public class CommonCargo extends ICargo
 {
 
-	private ItemStack display;
+	private ItemStack display = null;
 
 	public CommonCargo(String owner, ItemStack cargo, double cost)
 	{
-		super(CommonPublishment.instance, owner, cargo, cost);
-
-		display = cargo.clone();
+		super(CommonPublishment.instance, new Date(), owner, cargo, cost);
 
 		setUpDisplay();
 	}
 
 	public CommonCargo(String owner, ItemStack cargo, double cost, String des)
 	{
-		super(CommonPublishment.instance, owner, cargo, cost);
+		super(CommonPublishment.instance, new Date(), owner, cargo, cost);
 		this.description = des;
-
-		display = cargo.clone();
 
 		setUpDisplay();
 	}
 
+	public CommonCargo()
+	{
+	}
+
 	private void setUpDisplay()
 	{
-		Tools.addItemStackLore(display, "", "¡ì9¡ìl©– ¡ì9" + FileHandler.translate("Seller") + ": " + ownerName,
-				"¡ìf¡ìl©– " + FileHandler.getSetting().DefaultDescriptionFont + (description == null ? FileHandler.translate("NoDescription") : description),
-				"¡ìc¡ìl©– " + FileHandler.translate("Price") + ": ¡ìl" + cost, "¡ì7¡ìo(" + FileHandler.translate("infoClick") + "¡ì7¡ìo)");
+		if (display == null)
+			display = base.clone();
+
+		Tools.addItemStackLore(display, "", "¡ì9¡ìl©– ¡ì9" + MarketConfig.translate("Seller") + ": " + ownerName,
+				"¡ìf¡ìl©– " + MarketConfig.getSetting().DefaultDescriptionFont + (description == null ? MarketConfig.translate("NoDescription") : description),
+				"¡ìc¡ìl©– " + MarketConfig.translate("Price") + ": ¡ìl" + cost, "¡ì7¡ìo(" + MarketConfig.translate("infoClick") + "¡ì7¡ìo)");
 	}
 
 	@Override
@@ -46,35 +56,38 @@ public class CommonCargo extends ICargo
 	@Override
 	public boolean tryGetCargo(Player buyer, int amount)
 	{
-		int maxStack = base.getMaxStackSize();
+		MailBoxHandler.sendMail(buyer.getName(), new MailItem(ownerName, true, cost, amount, base, new Date()));
+		return true;
+	}
 
-		int total = base.getAmount() * amount;
+	@Override
+	public void read(String path, File file)
+	{
+		FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
-		int needEmpty = (total / maxStack) + (total % maxStack == 0 ? 0 : 1);
+		this.publishTime = new Date(config.getLong(path + ".Date"));
+		this.ownerName = config.getString(path + ".Owner");
+		this.cost = config.getDouble(path + ".Cost");
+		this.description = config.getString(path + "Description");
+		this.base = config.getItemStack(path + ".Cargo");
 
-		int empty = 0;
+		setUpDisplay();
+	}
 
-		ItemStack[] inventory = buyer.getInventory().getContents();
-		for (int i = 0; i < inventory.length; ++i)
-		{
-			if (inventory[i] == null)
-			{
-				++empty;
-			}
-		}
+	@Override
+	public void write(String path, FileConfiguration config)
+	{
+		config.set(path + ".Date", publishTime.getTime());
+		config.set(path + ".Owner", ownerName);
+		config.set(path + ".Cost", cost);
+		config.set(path + ".Description", this.description);
+		config.set(path + ".Cargo", base);
+	}
 
-		if (empty >= needEmpty)
-		{
-			for (int i = 0; i < amount; i++)
-			{
-				buyer.getInventory().addItem(base);
-			}
-			return true;
-		} else
-		{
-			buyer.sendMessage("¡ìc" + FileHandler.translate("errLackInventory"));
-			return false;
-		}
+	@Override
+	public String getMark()
+	{
+		return CommonCargo.class.getSimpleName();
 	}
 
 }

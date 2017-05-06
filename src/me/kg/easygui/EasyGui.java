@@ -79,6 +79,11 @@ public abstract class EasyGui
 		}
 	}
 
+	public void onForceClose()
+	{
+
+	}
+
 	/**
 	 * 如果你想要跳转到其他页面请使用
 	 * 		e.setCancelled(true);

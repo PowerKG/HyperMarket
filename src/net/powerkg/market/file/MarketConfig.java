@@ -1,32 +1,40 @@
 package net.powerkg.market.file;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
-import net.powerkg.hyper.Market;
+import net.powerkg.hyper.HyperHandler;
+import net.powerkg.hyper.HyperMarket;
+import net.powerkg.market.MarketCargoSaver;
 
-public class FileHandler
+public class MarketConfig implements HyperHandler
 {
+	private static DateFormat dateFormat;
+
 	private static HashMap<String, String> translaterMap = new HashMap<>();
 
-	private static FileHandler instance = null;
+	private static MarketConfig instance = null;
 
 	private static File lanuageFile = null;
 	private static FileConfiguration choseLanuage = null;
 
+	private static File marketFile = null;
+
 	private static ConfigSetting setting = null;
 	private static TaxSetting taxSetting = null;
 
-	public boolean initConfig(Plugin plugin)
+	public boolean load(Plugin plugin)
 	{
 		if (instance != null)
 			return false;
 		else
-			instance = new FileHandler();
+			instance = new MarketConfig();
 
 		plugin.saveDefaultConfig();
 		saveDefLanuageFile(plugin);
@@ -54,9 +62,19 @@ public class FileHandler
 			}
 		}
 
+		//加载市场
+		marketFile = new File(plugin.getDataFolder() + "/market");
+		MarketCargoSaver.load(marketFile);
+		if (!marketFile.exists())
+		{
+			marketFile.mkdirs();
+		} 
+
 		//读取Setting
 		setting = new ConfigSetting(config);
 		taxSetting = new TaxSetting(config);
+
+		dateFormat = new SimpleDateFormat((setting.DateFormat != null ? setting.DateFormat : "a hh:mm yyyy.MM.dd"));
 	}
 
 	/**
@@ -69,7 +87,7 @@ public class FileHandler
 		{
 			lanuageFile.mkdir();
 
-			plugin.saveResource(lanuageFile.getPath().replace("plugins\\" + Market.getInstance().getName() + "\\", "") + "/cn.yml", false);
+			plugin.saveResource(lanuageFile.getPath().replace("plugins\\" + HyperMarket.getInstance().getName() + "\\", "") + "/cn.yml", false);
 		}
 	}
 
@@ -81,6 +99,11 @@ public class FileHandler
 			return choseLanuage.getString(afterHandle).replaceAll("&", "§");
 		} else
 			return en;
+	}
+
+	public static DateFormat getDateFormat()
+	{
+		return dateFormat;
 	}
 
 	public static ConfigSetting getSetting()

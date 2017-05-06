@@ -7,6 +7,9 @@ import java.util.List;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import net.powerkg.market.ICargo;
+import net.powerkg.market.file.MarketConfig;
+
 public class Tools
 {
 	public static final ItemStack setItemStack(ItemStack item, String title, List<String> lore)
@@ -42,5 +45,11 @@ public class Tools
 	public static String toInfo(ItemStack stack)
 	{
 		return stack.getAmount() + " X " + (stack.getItemMeta().hasDisplayName() ? stack.getItemMeta().getDisplayName() : stack.getType().toString());
+	}
+
+	public static String toInfo(int amount, ItemStack item)
+	{
+
+		return amount + " " + MarketConfig.translate("Part") + " " + Tools.toInfo(item);
 	}
 }

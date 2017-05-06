@@ -52,15 +52,15 @@ public class FastUse implements Listener
 		}
 	}
 
-	private static boolean isJamming(UUID uuid)
-	{
-		return jamChatMap.containsKey(uuid);
-	}
-
-	private static void clear(UUID uuid)
-	{
-		jamChatMap.remove(uuid);
-	}
+//	private static boolean isJamming(UUID uuid)
+//	{
+//		return jamChatMap.containsKey(uuid);
+//	}
+//
+//	private static void clear(UUID uuid)
+//	{
+//		jamChatMap.remove(uuid);
+//	}
 
 	public static void jamMsg(Player player, IResultHandler handler)
 	{

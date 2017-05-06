@@ -5,14 +5,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.kg.easygui.GuiHandler;
 import me.kg.fastuse.FastUse;
+import me.kg.filedata.DataHandler;
+import net.powerkg.mailbox.MailBoxHandler;
+import net.powerkg.market.MarketCargoSaver;
 import net.powerkg.market.MarketHandler;
-import net.powerkg.market.file.FileHandler;
+import net.powerkg.market.file.MarketConfig;
 import net.powerkg.market.handler.CommandHandler;
 import net.powerkg.market.handler.EconomyHandler;
 
-public class Market extends JavaPlugin
+public class HyperMarket extends JavaPlugin
 {
-	private static Market instance;
+	private static HyperMarket instance;
 
 	private static ConsoleCommandSender console;
 
@@ -26,38 +29,47 @@ public class Market extends JavaPlugin
 	//金融系统
 	public static final EconomyHandler economyHandler = new EconomyHandler();
 	//设置处理系统
-	public static final FileHandler configHandler = new FileHandler();
+	public static final MarketConfig configHandler = new MarketConfig();
 	//命令处理器
 	public static final CommandHandler commandHandler = new CommandHandler();
+	//玩家邮箱(存储货物)
+	public static final MailBoxHandler mailboxHandler = new MailBoxHandler();
 
 	@Override
 	public void onEnable()
 	{
-		Market.instance = this;
+		HyperMarket.instance = this;
 		console = getServer().getConsoleSender();
 
+		
 		//初始化Easy-Use
 		GuiHandler.init(this);
 		FastUse.init(this);
+		DataHandler.init(this);
 
 		//初始化各个系统
-		if (!economyHandler.setupEconomy())
+
+		if (!configHandler.load(this))
+		{
+			tellConsole("§c配置文本加载失败.");
+		}
+
+		if (!economyHandler.load(this))
 		{
 			tellConsole("§c加载金融失败,插件停止加载,请确定是否安装Vault插件.");
 			return;
 		}
 
-		if (!configHandler.initConfig(this))
-		{
-			tellConsole("§c配置文本加载失败.");
-		}
+		mailboxHandler.load(this);
 
-		commandHandler.load();
+		commandHandler.load(this);
 
 		MarketHandler.init();
+		
+		MarketCargoSaver.readCargos();
 	}
 
-	public static Market getInstance()
+	public static HyperMarket getInstance()
 	{
 		return instance;
 	}

@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import me.kg.easygui.EasyGui;
@@ -21,7 +22,7 @@ import me.kg.fastuse.JamResult;
 import me.kg.fastuse.JamType;
 import net.powerkg.market.CommonCargo;
 import net.powerkg.market.MarketHandler;
-import net.powerkg.market.file.FileHandler;
+import net.powerkg.market.file.MarketConfig;
 import net.powerkg.market.handler.EconomyHandler;
 import net.powerkg.utils.Tools;
 
@@ -46,16 +47,16 @@ public class GuiCommonPublishment extends EasyGui implements IResultHandler
 	static
 	{
 		chooseHint = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 4);
-		Tools.setItemStack(chooseHint, "§e" + FileHandler.translate("infoCommonChooseHint"), null);
+		Tools.setItemStack(chooseHint, "§e" + MarketConfig.translate("infoCommonChooseHint"), null);
 
 		setCost = new ItemStack(Material.EMERALD);
-		Tools.setItemStack(setCost, "§c§l" + FileHandler.translate("Set Cost"), null);
+		Tools.setItemStack(setCost, "§c§l" + MarketConfig.translate("Set Cost"), null);
 
 		setDescription = new ItemStack(Material.SIGN);
-		Tools.setItemStack(setDescription, "§c§l" + FileHandler.translate("Set Description"), null);
+		Tools.setItemStack(setDescription, "§c§l" + MarketConfig.translate("Set Description"), null);
 
 		publish = new ItemStack(Material.NETHER_STAR);
-		Tools.setItemStack(publish, "§c§l" + FileHandler.translate("Confirm"), null);
+		Tools.setItemStack(publish, "§c§l" + MarketConfig.translate("Confirm"), null);
 	}
 
 	private ItemStack ownSetCost, ownSetDescription, ownPublish, colorfulHint, reset;
@@ -64,7 +65,7 @@ public class GuiCommonPublishment extends EasyGui implements IResultHandler
 	private GuiCommonPublishment(Player p)
 	{
 		super(p);
-		inv = Bukkit.createInventory(null, 36, "§9§l" + FileHandler.translate("infoCommonChooseAndSet"));
+		inv = Bukkit.createInventory(null, 36, "§9§l" + MarketConfig.translate("infoCommonChooseAndSet"));
 		initDisplayItem();
 		setupHint();
 	}
@@ -112,10 +113,9 @@ public class GuiCommonPublishment extends EasyGui implements IResultHandler
 
 	private void refreashInfoItem()
 	{
-		Tools.setItemStack(ownSetCost, null, Arrays.asList("§c" + FileHandler.translate("NowCost") + ": §l" + cost, "", "§7§o(" + FileHandler.translate("infoJump") + ")"));
-		Tools.setItemStack(ownSetDescription, null, Arrays.asList(
-				"§6" + FileHandler.translate("NowDescription") + ": " + FileHandler.getSetting().DefaultDescriptionFont + (Description == null ? FileHandler.translate("NoDescription") : Description),
-				"", "§7§o(" + FileHandler.translate("infoJump") + ")"));
+		Tools.setItemStack(ownSetCost, null, Arrays.asList("§c" + MarketConfig.translate("NowCost") + ": §l" + cost, "", "§7§o(" + MarketConfig.translate("infoJump") + ")"));
+		Tools.setItemStack(ownSetDescription, null, Arrays.asList("§6" + MarketConfig.translate("NowDescription") + ": " + MarketConfig.getSetting().DefaultDescriptionFont
+				+ (Description == null ? MarketConfig.translate("NoDescription") : Description), "", "§7§o(" + MarketConfig.translate("infoJump") + ")"));
 
 		inv.setItem(27, ownSetCost);
 		inv.setItem(28, ownSetDescription);
@@ -127,23 +127,23 @@ public class GuiCommonPublishment extends EasyGui implements IResultHandler
 
 		if (isEmpty(13))
 		{
-			Tools.setItemStack(ownPublish, "§c" + FileHandler.translate("CantPublish"), Arrays.asList("", "§9" + FileHandler.translate("NoSelected")));
+			Tools.setItemStack(ownPublish, "§c" + MarketConfig.translate("CantPublish"), Arrays.asList("", "§9" + MarketConfig.translate("NoSelected")));
 		} else
 		{
-			Tools.setItemStack(ownPublish, "§2" + FileHandler.translate("ConfirmToPublish"),
-					Arrays.asList("§6§l" + FileHandler.translate("Total") + " §6§l" + amount + " " + FileHandler.translate("Part") + " §6§l" + Tools.toInfo(inv.getItem(13)),
-							"§6" + FileHandler.translate("EachPriceIs") + ": §6§l" + cost));
+			Tools.setItemStack(ownPublish, "§2" + MarketConfig.translate("ConfirmToPublish"),
+					Arrays.asList("§6§l" + MarketConfig.translate("Total") + " §6§l" + amount + " " + MarketConfig.translate("Part") + " §6§l" + Tools.toInfo(inv.getItem(13)),
+							"§6" + MarketConfig.translate("EachPriceIs") + ": §6§l" + cost));
 
-			if (FileHandler.getTaxSetting().EnablePublish)
+			if (MarketConfig.getTaxSetting().EnablePublish)
 			{
 				Tools.addItemStackLore(ownPublish, "",
-						"§6" + FileHandler.translate("NeedToCost") + ": §9(" + amount + "*" + cost + "*" + FileHandler.getTaxSetting().PublishTax + "%(" + FileHandler.translate("Tax") + ")"
+						"§6" + MarketConfig.translate("NeedToCost") + ": §9(" + amount + "*" + cost + "*" + MarketConfig.getTaxSetting().PublishTax + "%(" + MarketConfig.translate("Tax") + ")"
 								+ ") -> §6§l" + needToCost(),
-						"§6" + FileHandler.translate("YourBalance") + ": §c§l" + (EconomyHandler.getBalance(getUser().getName())), (EconomyHandler.getBalance(getUser().getName()) >= needToCost()
-								? "§2§o(" + FileHandler.translate("infoClickChoose") + ")" : "§c§o(" + FileHandler.translate("infoNotEnoughMoney") + ")"));
+						"§6" + MarketConfig.translate("YourBalance") + ": §c§l" + (EconomyHandler.getBalance(getUser().getName())), (EconomyHandler.getBalance(getUser().getName()) >= needToCost()
+								? "§2§o(" + MarketConfig.translate("infoClickChoose") + ")" : "§c§o(" + MarketConfig.translate("infoNotEnoughMoney") + ")"));
 			} else
 			{
-				Tools.addItemStackLore(ownPublish, "", "§7§o(" + FileHandler.translate("infoClickChoose") + ")");
+				Tools.addItemStackLore(ownPublish, "", "§7§o(" + MarketConfig.translate("infoClickChoose") + ")");
 			}
 		}
 		inv.setItem(35, ownPublish);
@@ -151,7 +151,7 @@ public class GuiCommonPublishment extends EasyGui implements IResultHandler
 
 	private double needToCost()
 	{
-		double ncost = amount * cost * (FileHandler.getTaxSetting().EnablePublish ? FileHandler.getTaxSetting().PublishTax : 1);
+		double ncost = amount * cost * (MarketConfig.getTaxSetting().EnablePublish ? MarketConfig.getTaxSetting().PublishTax : 1);
 		BigDecimal b = new BigDecimal(ncost);
 		return b.setScale(1, RoundingMode.UP).doubleValue();
 	}
@@ -161,11 +161,11 @@ public class GuiCommonPublishment extends EasyGui implements IResultHandler
 		if (none())
 		{
 			reset = new ItemStack(Material.TORCH);
-			Tools.setItemStack(reset, "§c" + FileHandler.translate("Reset All"), null);
+			Tools.setItemStack(reset, "§c" + MarketConfig.translate("Reset All"), null);
 		} else
 		{
 			reset = new ItemStack(Material.REDSTONE_TORCH_ON);
-			Tools.setItemStack(reset, "§c" + FileHandler.translate("Reset All"), null);
+			Tools.setItemStack(reset, "§c" + MarketConfig.translate("Reset All"), null);
 		}
 		inv.setItem(34, reset);
 	}
@@ -236,11 +236,11 @@ public class GuiCommonPublishment extends EasyGui implements IResultHandler
 			{
 			case 27:
 				needset = sCost;
-				getUser().sendMessage("§c" + FileHandler.translate("infoSetCost"));
+				getUser().sendMessage("§c" + MarketConfig.translate("infoSetCost"));
 				break;
 			case 28:
 				needset = sDes;
-				getUser().sendMessage("§c" + FileHandler.translate("infoSetDescription"));
+				getUser().sendMessage("§c" + MarketConfig.translate("infoSetDescription"));
 				break;
 			}
 			setting = needset;
@@ -261,10 +261,10 @@ public class GuiCommonPublishment extends EasyGui implements IResultHandler
 				if (!none())
 				{
 					if (EconomyHandler.getBalance(getUser().getName()) < needToCost())
-						Tools.setItemStack(inv.getItem(35), "§c" + FileHandler.translate("infoNotEnoughMoney"), null);
+						Tools.setItemStack(inv.getItem(35), "§c" + MarketConfig.translate("infoNotEnoughMoney"), null);
 					else
 					{
-						Tools.setItemStack(inv.getItem(35), "§c" + FileHandler.translate("Reconfirm"), null);
+						Tools.setItemStack(inv.getItem(35), "§c" + MarketConfig.translate("Reconfirm"), null);
 						confirm = 1;
 					}
 				}
@@ -275,18 +275,19 @@ public class GuiCommonPublishment extends EasyGui implements IResultHandler
 				if (getUser().getInventory().first(cloneCargo) == -1)
 				{
 					confirm = 0;
-					Tools.setItemStack(inv.getItem(35), "§c" + FileHandler.translate("背包中没有该物品"), null);
+					Tools.setItemStack(inv.getItem(35), "§c" + MarketConfig.translate("背包中没有该物品"), null);
 					return;
 				}
 
-				getUser().getInventory().remove(cloneCargo);
+				Inventory inv = getUser().getInventory();
+				inv.setItem(inv.first(cloneCargo), null);
 
 				CommonCargo cargo = new CommonCargo(getUser().getName(), cloneCargo, cost, Description);
 				MarketHandler.tryPublishCargoWithCost(getUser(), cargo, needToCost());
 				close();
 				reset();
 
-				getUser().sendMessage("§2§l" + FileHandler.translate("infoPublishSuccessful"));
+				getUser().sendMessage("§2§l" + MarketConfig.translate("infoPublishSuccessful"));
 			}
 		}
 	}
@@ -319,7 +320,7 @@ public class GuiCommonPublishment extends EasyGui implements IResultHandler
 			{
 				if (setting == sDes)
 				{
-					if (FileHandler.getSetting().AllowColorfulDescription)
+					if (MarketConfig.getSetting().AllowColorfulDescription)
 					{
 						msg = msg.replaceAll("&", "§");
 					} else
@@ -339,13 +340,13 @@ public class GuiCommonPublishment extends EasyGui implements IResultHandler
 					{
 						if (!(args[0].matches("[0-9]+") && args[1].matches("[0-9]+")))
 						{
-							getUser().sendMessage("§c" + FileHandler.translate("infoWroingVault"));
+							getUser().sendMessage("§c" + MarketConfig.translate("infoWroingVault"));
 							FastUse.jamMsg(getUser(), this);
 							return;
 						}
 						if (args[1].length() > 2 || args[1].length() == 0)
 						{
-							getUser().sendMessage("§c" + FileHandler.translate("infoOverlengthDecimal"));
+							getUser().sendMessage("§c" + MarketConfig.translate("infoOverlengthDecimal"));
 							FastUse.jamMsg(getUser(), this);
 							return;
 						}
@@ -363,14 +364,14 @@ public class GuiCommonPublishment extends EasyGui implements IResultHandler
 					{
 						if (!(args[0].matches("[0-9]+")))
 						{
-							getUser().sendMessage("§c" + FileHandler.translate("infoWroingVault"));
+							getUser().sendMessage("§c" + MarketConfig.translate("infoWroingVault"));
 							FastUse.jamMsg(getUser(), this);
 							return;
 						}
 						cost = (double) Integer.parseInt(args[0]);
 					} else
 					{
-						getUser().sendMessage("§c" + FileHandler.translate("infoWroingVault"));
+						getUser().sendMessage("§c" + MarketConfig.translate("infoWroingVault"));
 						FastUse.jamMsg(getUser(), this);
 						return;
 					}

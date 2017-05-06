@@ -85,6 +85,7 @@ public class GuiHandler implements Listener
 
 		for (EasyGui gui : clones)
 		{
+			gui.onForceClose();
 			Guis.remove(gui);
 			gui.getUser().closeInventory();
 		}

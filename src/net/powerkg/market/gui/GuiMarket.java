@@ -14,9 +14,10 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.kg.easygui.EasyGui;
+import net.powerkg.mailbox.GuiMailBox;
 import net.powerkg.market.ICargo;
 import net.powerkg.market.MarketHandler;
-import net.powerkg.market.file.FileHandler;
+import net.powerkg.market.file.MarketConfig;
 import net.powerkg.utils.Tools;
 
 public class GuiMarket extends EasyGui
@@ -27,7 +28,9 @@ public class GuiMarket extends EasyGui
 			, pre/*下一页*/
 			, publish/*发布*/
 			, sort/*切换排序方式(未完工)*/
-			, search/*查找市场*/;
+			, search/*查找市场*/
+			, top/*返回主页*/
+			, mailBox/*打开邮箱*/;
 
 	private static final int slotOptionStart = 45;
 
@@ -40,24 +43,27 @@ public class GuiMarket extends EasyGui
 		//预加载
 
 		next = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5);
-		Tools.setItemStack(next, "§2" + FileHandler.translate("Page Up"), null);
+		Tools.setItemStack(next, "§2" + MarketConfig.translate("Page Up"), null);
 		pre = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 3);
-		Tools.setItemStack(pre, "§2" + FileHandler.translate("Page Down"), null);
+		Tools.setItemStack(pre, "§2" + MarketConfig.translate("Page Down"), null);
 
 		publish = new ItemStack(Material.BOOK_AND_QUILL);
-		Tools.setItemStack(publish, "§a" + FileHandler.translate("Publish"), Arrays.asList("", "§7§o(" + FileHandler.translate("infoJump") + "§7)"));
+		Tools.setItemStack(publish, "§a" + MarketConfig.translate("Publish"), Arrays.asList("", "§7§o(" + MarketConfig.translate("infoJump") + "§7)"));
 
 		sort = new ItemStack(Material.PAINTING);
 		Tools.setItemStack(sort, null, null);
 
 		search = new ItemStack(Material.COMPASS);
-		Tools.setItemStack(search, "§c" + FileHandler.translate("Search"), Arrays.asList("", "§7§o" + FileHandler.translate("infoJump") + "§7)"));
+		Tools.setItemStack(search, "§c" + MarketConfig.translate("Search"), Arrays.asList("", "§7§o" + MarketConfig.translate("infoJump") + "§7)"));
+
+		mailBox = new ItemStack(Material.CHEST);
+		Tools.setItemStack(mailBox, "§2" + MarketConfig.translate("OpenMailbox"), null);
 	}
 
 	public GuiMarket(Player p)
 	{
 		super(p);
-		inv = Bukkit.createInventory(null, 54, "§c§l" + FileHandler.translate("Market"));
+		inv = Bukkit.createInventory(null, 54, "§c§l" + MarketConfig.translate("Market"));
 
 		load();
 	}
@@ -65,7 +71,7 @@ public class GuiMarket extends EasyGui
 	public GuiMarket(Player p, int page)
 	{
 		super(p);
-		inv = Bukkit.createInventory(null, 54, "§c§l" + FileHandler.translate("Market"));
+		inv = Bukkit.createInventory(null, 54, "§c§l" + MarketConfig.translate("Market"));
 
 		pageNow = page;
 
@@ -103,8 +109,8 @@ public class GuiMarket extends EasyGui
 	private void refreshOption()
 	{
 		ItemStack fnext = next.clone(), fpre = pre.clone();
-		Tools.setItemStack(fnext, null, Arrays.asList("§9" + FileHandler.translate("Now Page Is") + " §6[§l" + pageNow + " §6/ §l" + pageMax + "]"));
-		Tools.setItemStack(fpre, null, Arrays.asList("§9" + FileHandler.translate("Now Page Is") + " §6[§l" + pageNow + " §6/ §l" + pageMax + "]"));
+		Tools.setItemStack(fnext, null, Arrays.asList("§9" + MarketConfig.translate("Now Page Is") + " §6§l[" + pageNow + " §6/ §l" + pageMax + "]"));
+		Tools.setItemStack(fpre, null, Arrays.asList("§9" + MarketConfig.translate("Now Page Is") + " §6§l[" + pageNow + " §6/ §l" + pageMax + "]"));
 
 		inv.setItem(slotOptionStart + 0, fpre);
 		inv.setItem(slotOptionStart + 1, fnext);
@@ -116,7 +122,9 @@ public class GuiMarket extends EasyGui
 
 		inv.setItem(slotOptionStart + 4, publish);
 
-		inv.setItem(slotOptionStart + 8, search);
+//		inv.setItem(slotOptionStart + 8, search);
+
+		inv.setItem(slotOptionStart + 7, mailBox);
 	}
 
 	public static void open(Player p)
@@ -164,7 +172,7 @@ public class GuiMarket extends EasyGui
 					pageNow = newPage;
 					reload();
 
-					if (FileHandler.getSetting().UsePageCache)
+					if (MarketConfig.getSetting().UsePageCache)
 					{
 						String name = getUser().getName().toLowerCase();
 
@@ -181,6 +189,10 @@ public class GuiMarket extends EasyGui
 				//publish
 				close();
 				new GuiPublish(getUser()).show();
+				break;
+			case slotOptionStart+7:
+				close();
+				new GuiMailBox(getUser()).show();
 				break;
 			case slotOptionStart + 8:
 				//search

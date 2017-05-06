@@ -11,9 +11,10 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.kg.easygui.EasyGui;
+import net.minecraft.server.v1_11_R1.EntityEvoker.e;
 import net.powerkg.market.ICargo;
 import net.powerkg.market.MarketHandler;
-import net.powerkg.market.file.FileHandler;
+import net.powerkg.market.file.MarketConfig;
 import net.powerkg.market.handler.EconomyHandler;
 import net.powerkg.utils.Tools;
 
@@ -25,12 +26,12 @@ public class GuiCommonBuy extends EasyGui
 
 	static
 	{
-		Tools.setItemStack(sp, "¡ìc" + FileHandler.translate("GuiBuyHint"), null);
+		Tools.setItemStack(sp, "¡ìc" + MarketConfig.translate("GuiBuyHint"), null);
 
-		Tools.setItemStack(add, "¡ì2" + FileHandler.translate("AddBuyAmount"), null);
-		Tools.setItemStack(remove, "¡ìc" + FileHandler.translate("ReduceBuyAmount"), null);
+		Tools.setItemStack(add, "¡ì2" + MarketConfig.translate("AddBuyAmount"), null);
+		Tools.setItemStack(remove, "¡ìc" + MarketConfig.translate("ReduceBuyAmount"), null);
 
-		Tools.setItemStack(confirm, "¡ì6¡ìl" + FileHandler.translate("ConfirmToBuy"), null);
+		Tools.setItemStack(confirm, "¡ì6¡ìl" + MarketConfig.translate("ConfirmToBuy"), null);
 	}
 
 	private int amount = 1;
@@ -41,7 +42,7 @@ public class GuiCommonBuy extends EasyGui
 		super(p);
 
 		this.cargo = cargo;
-		inv = Bukkit.createInventory(null, 9, "¡ìc" + FileHandler.translate("Buy"));
+		inv = Bukkit.createInventory(null, 9, "¡ìc" + MarketConfig.translate("Buy"));
 
 		inv.setItem(0, cargo.getDisplay());
 		inv.setItem(1, sp);
@@ -52,19 +53,19 @@ public class GuiCommonBuy extends EasyGui
 	public void refreshButton()
 	{
 		ItemStack newAdd = add.clone();
-		Tools.setItemStack(newAdd, null, Arrays.asList("¡ì9<" + FileHandler.translate("NowBuyAmount") + ": ¡ì6¡ìl" + amount + "¡ì9 >"));
+		Tools.setItemStack(newAdd, null, Arrays.asList("¡ì9<" + MarketConfig.translate("NowBuyAmount") + ": ¡ì6¡ìl" + amount + "¡ì9 >"));
 		inv.setItem(2, newAdd);
 
 		ItemStack newRemove = remove.clone();
-		Tools.setItemStack(newRemove, null, Arrays.asList("¡ì9<" + FileHandler.translate("NowBuyAmount") + ": ¡ì6¡ìl" + amount + "¡ì9 >"));
+		Tools.setItemStack(newRemove, null, Arrays.asList("¡ì9<" + MarketConfig.translate("NowBuyAmount") + ": ¡ì6¡ìl" + amount + "¡ì9 >"));
 		inv.setItem(3, newRemove);
 
 		ItemStack newConfirm = confirm.clone();
 		Tools.setItemStack(newConfirm, null,
-				Arrays.asList("¡ì6¡ìl" + FileHandler.translate("Total") + " ¡ì6¡ìl" + amount + " " + FileHandler.translate("Part") + " ¡ì6¡ìl" + Tools.toInfo(cargo.getBase()),
-						"¡ìc" + FileHandler.translate("NeedToCost") + " ¡ì6¡ìl" + cargo.getCost() * amount, "",
-						"¡ì9" + FileHandler.translate("YourBalance") + ": " + EconomyHandler.getBalance(getUser().getName()),
-						(canBuy() ? "¡ì2¡ìo" + FileHandler.translate("Reconfirm") : "¡ì6¡ìo" + FileHandler.translate("infoNotEnoughMoney"))));
+				Arrays.asList("¡ì6¡ìl" + MarketConfig.translate("Total") + " ¡ì6¡ìl" + amount + " " + MarketConfig.translate("Part") + " ¡ì6¡ìl" + Tools.toInfo(cargo.getBase()),
+						"¡ìc" + MarketConfig.translate("NeedToCost") + " ¡ì6¡ìl" + cargo.getCost() * amount, "",
+						"¡ì9" + MarketConfig.translate("YourBalance") + ": " + EconomyHandler.getBalance(getUser().getName()),
+						(canBuy() ? "¡ì2¡ìo" + MarketConfig.translate("Reconfirm") : "¡ì6¡ìo" + MarketConfig.translate("infoNotEnoughMoney"))));
 		inv.setItem(8, newConfirm);
 	}
 
@@ -102,9 +103,12 @@ public class GuiCommonBuy extends EasyGui
 			{
 				if (cargo.tryGetCargo(getUser(), amount))
 				{
-					MarketHandler.tryBuyCargo(getUser(), cargo, getCost());
-					getUser().sendMessage("¡ì2" + FileHandler.translate("infoSuccessfulBuy"));
+					MarketHandler.tryBuyCargo(getUser(), cargo, getCost(), amount);
+					getUser().sendMessage("¡ì2" + MarketConfig.translate("infoSuccessfulBuy"));
 				}
+			}else
+			{
+				event.setCancelled(true);
 			}
 		}
 	}
